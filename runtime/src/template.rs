@@ -11,7 +11,7 @@
 use support::{decl_module, decl_storage, decl_event, StorageValue, dispatch::Result};
 use system::ensure_signed;
 
-/// The module's configuration trait.
+// The module's configuration trait.
 pub trait Trait: system::Trait {
 	// TODO: Add other types and constants required configure this module.
 
@@ -19,7 +19,7 @@ pub trait Trait: system::Trait {
 	type Event: From<Event<Self>> + Into<<Self as system::Trait>::Event>;
 }
 
-/// This module's storage items.
+// This module's storage items.
 decl_storage! {
 	trait Store for Module<T: Trait> as TemplateModule {
 		// Just a dummy storage item. 

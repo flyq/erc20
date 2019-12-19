@@ -1,7 +1,7 @@
 use primitives::{ed25519, sr25519, Pair};
 use erc20_runtime::{
 	AccountId, GenesisConfig, ConsensusConfig, TimestampConfig, BalancesConfig,
-	SudoConfig, IndicesConfig, Erc20Config,
+	SudoConfig, IndicesConfig, Erc20ModuleConfig,
 };
 use substrate_service;
 
@@ -115,8 +115,8 @@ fn testnet_genesis(initial_authorities: Vec<AuthorityId>, endowed_accounts: Vec<
 		sudo: Some(SudoConfig {
 			key: root_key,
 		}),
-		erc20: Some(Erc20Config {
-			owner: ed25519::Pair::from_seed(b"Alice                           ").public().0.into(),
+		erc20: Some(Erc20ModuleConfig {
+			owner: account_key("Alice"),
 			// setting total supply of erc20 tokens to 21M because `Satoshi` said so
 			total_supply: 21000000,
 			name: "SubstrateDemoToken".as_bytes().into(),

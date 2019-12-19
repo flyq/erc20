@@ -12,7 +12,7 @@ use rstd::prelude::*;
 use parity_codec::Codec;
 use runtime_primitives::traits::{CheckedSub, CheckedAdd, Member, SimpleArithmetic, As};
 
-/// The module's configuration trait.
+// The module's configuration trait.
 pub trait Trait: system::Trait {
     // TODO: Add other types and constants required configure this module.
 
@@ -21,7 +21,7 @@ pub trait Trait: system::Trait {
     type TokenBalance: Parameter + Member + SimpleArithmetic + Codec + Default + Copy + As<usize> + As<u128>;    
 }
 
-/// This module's storage items.
+// This module's storage items.
 decl_storage! {
     trait Store for Module<T: Trait> as erc20 {
         // bool flag to allow init to be called only once
@@ -99,16 +99,17 @@ decl_module! {
 
       // if approved, transfer from an account to another account without needing owner's signature
       fn transfer_from(_origin, from: T::AccountId, to: T::AccountId, #[compact] value: T::TokenBalance) -> Result {
-          ensure!(<Allowance<T>>::exists((from.clone(), to.clone())), "Allowance does not exist.");
-          let allowance = Self::allowance((from.clone(), to.clone()));
+          let sender = ensure_signed(_origin)?;
+          ensure!(<Allowance<T>>::exists((from.clone(), sender.clone())), "Allowance does not exist.");
+          let allowance = Self::allowance((from.clone(), sender.clone()));
           ensure!(allowance >= value, "Not enough allowance.");
 
           // using checked_sub (safe math) to avoid overflow
           let updated_allowance = allowance.checked_sub(&value).ok_or("overflow in calculating allowance")?;
           // insert the new allownace value of this sender and spender combination
-          <Allowance<T>>::insert((from.clone(), to.clone()), updated_allowance);
+          <Allowance<T>>::insert((from.clone(), sender.clone()), updated_allowance);
 
-          Self::deposit_event(RawEvent::Approval(from.clone(), to.clone(), value));
+          Self::deposit_event(RawEvent::Approval(from.clone(), sender.clone(), value));
           Self::_transfer(from, to, value)
       }
     }
