@@ -22,10 +22,25 @@ pub trait Trait: system::Trait {
 /// This module's storage items.
 decl_storage! {
 	trait Store for Module<T: Trait> as erc20 {
-		// Just a dummy storage item. 
-		// Here we are declaring a StorageValue, `Something` as a Option<u32>
-		// `get(something)` is the default getter which returns either the stored `u32` or `None` if nothing stored
-		Something get(something): Option<u32>;
+		// bool flag to allow init to be called only once
+		Init get(is_init): bool;
+
+		// owner gets all the tokens when calls initialize
+		// setting via genesis config to avoid race condition
+		Owner get(owner) config(): T::AccountId;
+	
+		// total supply of the token
+		// set in the genesis config
+		// see ../../src/chain_spec.rs - line 105
+		TotalSupply get(total_supply) config(): T::TokenBalance;
+		
+		// not really needed - name and ticker, but why not?
+		Name get(name) config(): Vec<u8>;
+		Ticker get (ticker) config(): Vec<u8>;
+	
+		// standard balances and allowances mappings for ERC20 implementation
+		BalanceOf get(balance_of): map T::AccountId => T::TokenBalance;
+		Allowance get(allowance): map (T::AccountId, T::AccountId) => T::TokenBalance;
 	}
 }
 
