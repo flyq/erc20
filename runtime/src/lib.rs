@@ -197,6 +197,7 @@ impl template::Trait for Runtime {
 impl erc20::Trait for Runtime {
     // add required types here
     type Event = Event;
+    type TokenBalance = u128;
 }
 
 construct_runtime!(
