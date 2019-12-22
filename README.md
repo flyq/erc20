@@ -25,7 +25,7 @@ Build the WebAssembly binary:
 Build all native code:
 
 ```bash
-cargo build
+cargo build --release
 ```
 
 # Run
@@ -33,7 +33,7 @@ cargo build
 You can start a development chain with:
 
 ```bash
-cargo run -- --dev
+./target/release/erc20 --dev
 ```
 
 Detailed logs may be shown by running the node with the following environment variables set: `RUST_LOG=debug RUST_BACKTRACE=1 cargo run -- --dev`.
